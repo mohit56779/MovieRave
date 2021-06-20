@@ -3,10 +3,11 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const config = require('./config/key')
 
 const {User} = require('./models/user');
 
-mongoose.connect('mongodb+srv://mohit56779:mohit1234@movierave.cbrl8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+mongoose.connect(config.mongoURI,
                     {useNewUrlParser:true}).then(() =>console.log('DB connected.'))
                                             .catch(err => consolde.error(err));
 

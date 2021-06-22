@@ -46,6 +46,7 @@ userSchema.pre('save', function(next){
             bcrypt.hash(user.password, salt, function(err,hash){
                 if(err) return next(err);
                 user.password = hash;
+                next()
             })
             
         })
@@ -71,6 +72,22 @@ userSchema.methods.generateToken = function(callbackFn){
         if(err) return callbackFn(err);
         callbackFn(null,user);
     })
+}
+
+userSchema.statics.findByToken = function(token, callbackFn){
+
+    var user = this;
+
+    jwt.verify(token, 'secret', function(err, decode){
+        user.findOne( {"_id": decode, "token": token}, function(err,user){
+            if(err) return callbackFn(err);
+            callbackFn(null,user);
+
+        })
+
+
+    })
+
 }
 
 const User = mongoose.model('User', userSchema)
